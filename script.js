@@ -26,7 +26,7 @@ const productArray = [
     }
 ];
 
-let cart = [];
+
 let totalPrice = 0;
 let totalQuantity = 0;
 
@@ -52,7 +52,7 @@ productArray.forEach((product) => {
     addBtn.addEventListener('click', () =>{
         var productToAdd = document.createElement('li');
         var productInfo = document.createElement('span');
-
+        let quantity = listItem.children[2].value;  
       var deleteButton = document.createElement('btn');
           deleteButton.textContent = "Remove";
           deleteButton.style.background="red";
@@ -61,31 +61,47 @@ productArray.forEach((product) => {
           deleteButton.style.cursor='pointer';
 
           deleteButton.addEventListener('click', () =>{
+             totalPrice-=product.price.toFixed(2)*quantity;
+             totalQuantity-=quantity;
              productToAdd.remove();
-             totalPrice-=product.price.toFixed();
-             totalQuantity--;
              totalPriceField.textContent=totalPrice.toFixed(2);
              totalQuantityField.textContent=totalQuantity;
+             
           })
 
-
-        productInfo.textContent = product.name + " "+ product.price.toFixed(2)+"$" + "᲼᲼᲼᲼᲼᲼᲼᲼Quantity 1";
+        
+        if(quantity<1){
+            quantity=1;
+        }
+        if(quantity>99){
+            quantity=99;
+        }
+        productInfo.textContent = product.name + " "+ product.price.toFixed(2)+"$" + "᲼᲼᲼᲼᲼᲼᲼᲼Quantity " + quantity;
         productToAdd.appendChild(productInfo);
         productToAdd.appendChild(deleteButton);
-        totalPrice+=product.price;
-        totalQuantity++;
-
+        totalPrice+=product.price*quantity;
+        totalQuantity+=Number(quantity);
+        
         productsInCart.appendChild(productToAdd);
         totalPriceField.textContent=totalPrice.toFixed(2);
         totalQuantityField.textContent=totalQuantity;
-       // cart.push(product.name);
+        cart.push(product.name);
     })
 
     nameSpan.textContent = "" + product.name + " ";
     priceSpan.textContent = "Price: " + product.price.toFixed(2) + "$";
 
+    var numSelector = document.createElement('input');
+    numSelector.type = 'number';
+    numSelector.name = "quantity";
+    numSelector.min = 0;
+    numSelector.max = 99;
+    numSelector.value =1;
+    numSelector.step = 1;
+    
     listItem.appendChild(nameSpan);
     listItem.appendChild(priceSpan);
+    listItem.appendChild(numSelector);
     listItem.appendChild(addBtn);
     
     availableProducts.appendChild(listItem);
